@@ -38,31 +38,46 @@ def calculate_passes(df, event, points):
     fp_passes = len(falcon_pear)
     pp_passes = len(pear_pear)
     pf_passes = len(pear_falcon)
-    fig= plt.figure(figsize = (8,6))
+    
+    fig1, (ax1, ax2) = plt.subplots(nrows=1, ncols=2,figsize = (12,6))
     
     # plot
-    plt.bar(x=['falcon-falcon','falcon-pear','pear-pear','pear-falcon', 'falcon','pear'],
-            height=[ff_passes/all_passes*100, 
-                    fp_passes/all_passes*100, 
-                    pp_passes/all_passes*100,
-                    pf_passes/all_passes*100,
-                    falcon_passes/all_passes*100,
+    ax1.bar(x=['falcon','pear'],
+            height=[falcon_passes/all_passes*100,
                     pear_passes/all_passes*100],
-           color =['limegreen', 'darkgreen', 'limegreen', 'darkgreen', 'blue','orange'],
+           color =['blue','orange'],
            edgecolor = 'black',
            linewidth = 3,
            alpha = 0.3)
-    
     tag = str(round(points)) + ' points'
-    plt.xticks(fontsize = 14, rotation=45)
-    plt.yticks(fontsize = 14)
-    plt.xlabel('Type of Pass', fontsize =16, fontweight = 'bold', color = 'grey')
-    plt.ylabel('Percent of Passes (%)', fontsize =16, fontweight = 'bold', color = 'grey')
-    plt.ylim([0,100])
-    plt.title(event, fontweight = 'bold', fontsize = 18, color = 'grey')
-    plt.suptitle('Distribution of Passes on Birdfruit 2021', fontweight = 'bold', fontsize=20)
-    plt.text(-0.25, 85 ,tag, fontsize = 14, fontweight='bold', color = 'grey')
-    plt.tight_layout()
+    ax1.spines['right'].set_visible(False)
+    ax1.spines['top'].set_visible(False)
+    ax1.set_xlabel('Type of Pass', fontsize =16, fontweight = 'bold', color = 'grey')
+    ax1.set_ylabel('Percent of Passes (%)', fontsize =16, fontweight = 'bold', color = 'grey')
+    ax1.set_ylim([0,100])
+    ax1.set_title(event, fontweight = 'bold', fontsize = 18, color = 'grey', loc = 'left',pad = 10)
+    fig1.suptitle('Distribution of Passes on Birdfruit 2021', fontweight = 'bold', fontsize=20)
+    ax1.text(-0.25, 85 ,tag, fontsize = 14, fontweight='bold', color = 'grey')
+#     ax1.tight_layout()
+
+#     fig2 = plt.figure(figsize=(6,6))
+    
+    # plot
+    labels = ['falcon-falcon','falcon-pear','pear-pear','pear-falcon']
+    sizes = [ff_passes/all_passes*100, 
+             fp_passes/all_passes*100, 
+             pp_passes/all_passes*100,
+             pf_passes/all_passes*100
+            ]
+    colors = ['limegreen', 'darkgreen', 'limegreen', 'darkgreen']
+    patches, texts, pcts = ax2.pie(sizes, labels=labels, colors = colors, autopct='%1.1f%%',startangle=90, 
+                                   wedgeprops = {'alpha':0.5, 'linewidth':3,'edgecolor':'white'}, 
+                                   textprops = {'fontsize':12, 'fontweight': 'bold', 'color':'grey'})
+    plt.setp(pcts, color='white', fontweight='bold')
+    ax2.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
+    ax2.set_title('Passer-Receiver Breakdown', fontweight='bold', fontsize = 18, color = 'darkgrey', loc= 'right', pad = 10) 
+    
+    fig1.tight_layout(pad=1.5)
     
 def falcon_or_pear(df):
     falcons = ['Banxx', 'Jno', 'Manson','Mel',
